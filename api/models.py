@@ -12,7 +12,7 @@ class Client(models.Model):
 class Message(models.Model):
     """Modelo que almacena los mensajes intercambiados con cada cliente. """
     ROLE_CHOICES = [('client', 'client'), ('agent', 'agent')]
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='messages', verbose_name="Cliente")
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='messages')
     text = models.TextField( )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, verbose_name="Rol",)
     sent_at = models.DateTimeField(auto_now_add=True)

@@ -3,7 +3,6 @@ from .utils import validarRut
 from . import models
 
 class DebtSerializer(serializers.ModelSerializer):
-  
   client = serializers.PrimaryKeyRelatedField(queryset=models.Client.objects.all())
 
   def validate_institution(self, value):
@@ -57,7 +56,7 @@ class ClientSerializer(serializers.ModelSerializer):
 
 class ClientAllSerializer(serializers.ModelSerializer):
   debts = DebtSerializer(many=True, read_only=True)
-  messages = DebtSerializer(many=True, read_only=True)
+  messages = MessageSerializer(many=True, read_only=True)
 
   def validate_rut(self, value):
     if value == '':

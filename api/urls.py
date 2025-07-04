@@ -7,5 +7,6 @@ urlpatterns = [
     path('debts/', views.DebtView.as_view()),
     path('messages/', views.MessaggeView.as_view()),
     path('messages/<int:pk>/', views.MessaggeView.as_view()),
+    path('clients-to-do-follow/<int:pk>/', views.FollowView.as_view()),
 ]
 
