@@ -4,15 +4,17 @@ from decouple import config
 from openai import OpenAI
 from datetime import datetime
 from dateutil import parser
+from . import models
+from django.core.exceptions import ValidationError
 
 client = OpenAI(api_key=config("APIKEY"))
 
 def chatBox(dicData, filtros=True):
 	if filtros:
-		filtros = """	**Restricciones (analiza silenciosamente antes de responder):**
-		1. Si el último mensaje fue hace menos de 48 horas → responde solo dos llaves vacias.
-		2. Si el último mensaje fue hace más de 6 meses → responde solo dos llaves vacias.
-		3. Si la suma de las deudas del cliente es mayor a 15.000.000 CLP → responde solo dos llaves vacias."""
+		filtros = """	
+		2. Si el último mensaje fue hace menos de 48 horas → responde solo dos llaves vacias.
+		3. Si el último mensaje fue hace más de 6 meses → responde solo dos llaves vacias.
+		"""
 	else:
 		filtros=""
 
@@ -27,13 +29,17 @@ def chatBox(dicData, filtros=True):
 		- Cerro Lindo (este último tiene descuento en el pie)
 
 		Quiero que generes un mensaje de seguimiento **corto, profesional y personalizado**, pero solo si se cumplen las siguientes condiciones:
+		**Restricciones (analiza silenciosamente antes de responder):**
+		1. Si la suma de las deudas del cliente es mayor a 15.000.000 CLP → responde solo dos llaves vacias.
 		{filtros}
 		Ejecuta el análisis silenciosamente y si corresponde, genera el mensaje.
 		"""
 
 	response = client.chat.completions.create(
 		model="gpt-4-turbo",
-		messages=[{"role": "user", "content": consulta}]
+		messages=[
+			{"role": "system", "content": "Eres un asistente comercial experto en análisis de clientes y ventas inmobiliarias."},
+			{"role": "user", "content": consulta}]
     )
 	return response.choices[0].message.content
 
@@ -67,3 +73,26 @@ def validarRut(rut):
 			return False
 	except:
 		return False
+	
+def guardarMensaje(mensaje:str, client_id:int, role:str):
+	try:
+		if role not in ['agent', 'client']:
+			raise ValidationError()
+		
+		if len(mensaje)<4:
+			return True	#mensaje vacio
+
+		cliente = models.Client.objects.get(pk=client_id)
+		nuevoMensaje = models.Message.objects.create(client=cliente, text=mensaje, role=role)
+		nuevoMensaje.save()
+		return True
+	except models.Client.DoesNotExist:
+		print("manejar cliente no existe")
+		return False
+	except ValidationError:
+		print("manejar role no valido")
+		return False
+	except:
+		print("manejar otro problema")
+		return False
+
