@@ -23,3 +23,6 @@
 
 # Modelo de Open Ai
 - se escogio el modelo gpt-4-turbo por ser suficiente para realizar el trabajo, ademas de ser rapido y un coste acorde.
+
+# Apoyo de chatGPT
+- Utilice ayuda para crear la cuenta de GCP y para el deploy de la app
