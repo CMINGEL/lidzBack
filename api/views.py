@@ -53,10 +53,11 @@ class FollowView(APIView):
             queryset = models.Client.objects.get(pk=pk)
             serializer = serializers.ClientAllSerializer(queryset, many=False)
             filtro = utils.mensajeHoy(serializer.data["messages"])
-            print(filtro)
             respuesta = utils.chatBox(serializer.data, filtro)
+            guardaMensaje = utils.guardarMensaje(respuesta, pk, 'agent')
             return Response({respuesta}, status=status.HTTP_200_OK)
         except models.Client.DoesNotExist:
             return Response({},status=status.HTTP_404_NOT_FOUND)
 
 
+ 
