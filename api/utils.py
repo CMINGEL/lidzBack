@@ -12,8 +12,7 @@ client = OpenAI(api_key=config("APIKEY"))
 def chatBox(dicData, filtros=True):
 	if filtros:
 		filtros = """	
-		2. Si el último mensaje fue hace menos de 48 horas → responde solo dos llaves vacias.
-		3. Si el último mensaje fue hace más de 6 meses → responde solo dos llaves vacias.
+		3.
 		"""
 	else:
 		filtros=""
@@ -31,6 +30,7 @@ def chatBox(dicData, filtros=True):
 		Quiero que generes un mensaje de seguimiento **corto, profesional y personalizado**, pero solo si se cumplen las siguientes condiciones:
 		**Restricciones (analiza silenciosamente antes de responder):**
 		1. Si la suma de las deudas del cliente es mayor a 15.000.000 CLP → responde solo dos llaves vacias.
+		2. Si no tienes la respues di "Dejame averiguarlo" y termina la conversacion.
 		{filtros}
 		Ejecuta el análisis silenciosamente y si corresponde, genera el mensaje.
 		"""
@@ -80,7 +80,7 @@ def guardarMensaje(mensaje:str, client_id:int, role:str):
 			raise ValidationError()
 		
 		if len(mensaje)<4:
-			return True	#mensaje vacio
+			return True	#mensaje vacio no lo guarda
 
 		cliente = models.Client.objects.get(pk=client_id)
 		nuevoMensaje = models.Message.objects.create(client=cliente, text=mensaje, role=role)
