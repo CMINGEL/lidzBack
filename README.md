@@ -35,4 +35,5 @@
 # Apoyo de chatGPT
 - Utilice ayuda del LLM para crear la cuenta de GCP y para el deploy de la app
 
-# Este pequeño mock espero muestre mis habilidades y la capacidad de adaptacion al ser primera vez con GCP,  
+# Importante 
+- la respuesta dejame averiguarlo dispararia un contacto de un ejecutivo

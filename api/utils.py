@@ -2,7 +2,7 @@ from itertools import cycle
 import json
 from decouple import config
 from openai import OpenAI
-from datetime import datetime
+from datetime import datetime, date
 from dateutil import parser
 from . import models
 from django.core.exceptions import ValidationError
@@ -11,8 +11,8 @@ client = OpenAI(api_key=config("APIKEY"))
 
 def chatBox(dicData, filtros=True):
 	if filtros:
-		filtros = """	
-		3.
+		filtros = f"""	
+		3. Si tiene mensajes del dia anterior a hoy: {date.today()} no respondas para no ser invasivos.
 		"""
 	else:
 		filtros=""
@@ -20,6 +20,7 @@ def chatBox(dicData, filtros=True):
 	jsonData= json.dumps(dicData)
 	consulta = f"""
 		Eres un asistente comercial cuya tarea es hacer seguimiento a clientes potenciales de forma profesional y respetuosa.
+		Puedes insistir respondiendo los mismos mensajes si no hay respuesta del cliente.
 		A continuación te entrego los datos disponibles del posible cliente en formato JSON: {jsonData}
 
 		Este cliente ha visitado algunos de nuestros proyectos inmobiliarios en la web, entre ellos:
